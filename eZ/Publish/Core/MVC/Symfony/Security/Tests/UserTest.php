@@ -18,7 +18,7 @@ class UserTest extends PHPUnit_Framework_TestCase
         $login = 'my_username';
         $passwordHash = 'encoded_password';
         $apiUser = $this
-            ->getMockBuilder('eZ\Publish\API\Repository\Values\User\User')
+            ->getMockBuilder('eZ\Publish\Core\Repository\Values\User\User')
             ->setConstructorArgs(
                 array(
                     array(
@@ -29,6 +29,10 @@ class UserTest extends PHPUnit_Framework_TestCase
                 )
             )
             ->getMockForAbstractClass();
+        $apiUser
+            ->expects($this->any())
+            ->method('getUserId')
+            ->will($this->returnValue(42));
         $roles = array('ROLE_USER');
 
         $user = new User($apiUser, $roles);
@@ -49,8 +53,7 @@ class UserTest extends PHPUnit_Framework_TestCase
         $apiUser = $this->getMock('eZ\Publish\API\Repository\Values\User\User');
         $apiUser
             ->expects($this->any())
-            ->method('__get')
-            ->with('id')
+            ->method('getUserId')
             ->will($this->returnValue($userId));
         $roles = array('ROLE_USER');
 
@@ -59,8 +62,7 @@ class UserTest extends PHPUnit_Framework_TestCase
         $apiUser2 = $this->getMock('eZ\Publish\API\Repository\Values\User\User');
         $apiUser2
             ->expects($this->any())
-            ->method('__get')
-            ->with('id')
+            ->method('getUserId')
             ->will($this->returnValue($userId));
         $user2 = new User($apiUser2, array());
 
@@ -72,8 +74,7 @@ class UserTest extends PHPUnit_Framework_TestCase
         $apiUser = $this->getMock('eZ\Publish\API\Repository\Values\User\User');
         $apiUser
             ->expects($this->any())
-            ->method('__get')
-            ->with('id')
+            ->method('getUserId')
             ->will($this->returnValue(123));
         $roles = array('ROLE_USER');
 
@@ -82,8 +83,7 @@ class UserTest extends PHPUnit_Framework_TestCase
         $apiUser2 = $this->getMock('eZ\Publish\API\Repository\Values\User\User');
         $apiUser2
             ->expects($this->any())
-            ->method('__get')
-            ->with('id')
+            ->method('getUserId')
             ->will($this->returnValue(456));
         $user2 = new User($apiUser2, array());
 
@@ -93,7 +93,7 @@ class UserTest extends PHPUnit_Framework_TestCase
     public function testIsEqualToNotSameUserType()
     {
         $user = new User();
-        $user2 = $this->getMock('Symfony\Component\Security\Core\User\UserInterface');
+        $user2 = $this->getMock('Symfony\Component\Security\Core\User\ReferenceUserInterface');
         $this->assertFalse($user->isEqualTo($user2));
     }
 

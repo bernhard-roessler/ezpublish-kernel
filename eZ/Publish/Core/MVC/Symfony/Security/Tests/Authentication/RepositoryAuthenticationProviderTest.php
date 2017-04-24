@@ -71,9 +71,13 @@ class RepositoryAuthenticationProviderTest extends PHPUnit_Framework_TestCase
      */
     public function testCheckAuthenticationCredentialsChanged()
     {
-        $apiUser = $this->getMockBuilder('eZ\Publish\API\Repository\Values\User\User')
-            ->setConstructorArgs(array(array('passwordHash' => 'some_encoded_password')))
+        $apiUser = $this->getMockBuilder('eZ\Publish\Core\Repository\Values\User\User')
+            ->setConstructorArgs([['passwordHash' => 'some_encoded_password']])
             ->getMockForAbstractClass();
+        $apiUser
+            ->expects($this->any())
+            ->method('getUserId')
+            ->will($this->returnValue(456));
         $tokenUser = new User($apiUser);
         $token = new UsernamePasswordToken($tokenUser, 'foo', 'bar');
 
