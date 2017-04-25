@@ -42,7 +42,7 @@ class ResponseListener implements EventSubscriberInterface
         return array(
             KernelEvents::VIEW => 'onKernelResultView',
             // Must happen BEFORE the Core ExceptionListener.
-            KernelEvents::EXCEPTION => ['onKernelExceptionView', 20],
+            KernelEvents::EXCEPTION => ['onKernelExceptionView', -5],
         );
     }
 
